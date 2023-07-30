@@ -1,0 +1,12 @@
+.env
+.DS_Store
+.cfmms-checkpoint.json
+
+venv/
+target/
+
+.idea/
+.vscode/
+__pycache__/
+
+*.pyc
