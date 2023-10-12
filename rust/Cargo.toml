@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rand = "0.8.5"
 anyhow = "1.0.71"
 dashmap = "5.4.0"
 hex-literal = "0.4"
@@ -15,8 +16,8 @@ auto_impl = { version = "1.1", default-features = false }
 # ethers
 ethers-providers = "2.0"
 ethers-core = "2.0"
-ethers-contract = { version = "2.0.3", default-features = false }
-ethers = {version = "2.0.7", features = ["abigen", "ws", "rustls"]}
+ethers-contract = { version = "2.0", default-features = false }
+ethers = {version = "2.0", features = ["abigen", "ws", "rustls"]}
 
 # async
 futures = "0.3.27"
@@ -31,5 +32,3 @@ colored = "2.0.0"
 
 # github
 cfmms = { git = "https://github.com/0xKitsune/cfmms-rs.git" }
-anvil = { git = "https://github.com/foundry-rs/foundry.git" }
-foundry-evm = { git = "https://github.com/foundry-rs/foundry.git" }

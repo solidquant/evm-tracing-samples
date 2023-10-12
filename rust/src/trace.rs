@@ -1,4 +1,3 @@
-use anvil::eth::fees::calculate_next_block_base_fee;
 use anyhow::{anyhow, Result};
 use cfmms::{
     checkpoint::sync_pools_from_checkpoint,
@@ -19,6 +18,8 @@ use std::{path::Path, str::FromStr, sync::Arc};
 use tokio::sync::broadcast::{self, Sender};
 use tokio::task::JoinSet;
 use tokio_stream::StreamExt;
+
+use crate::utils::calculate_next_block_base_fee;
 
 #[derive(Default, Debug, Clone)]
 pub struct NewBlock {
@@ -42,6 +43,11 @@ async fn trace_state_diff(
     pools: &DashMap<H160, Pool>,
     target_address: String,
 ) -> Result<()> {
+    info!(
+        "Tx #{} received. Checking if it touches: {}",
+        tx.hash, target_address
+    );
+
     let target_address: Address = target_address.parse().unwrap();
 
     let state_diff = provider
@@ -191,6 +197,7 @@ pub async fn mempool_watching(target_address: String) -> Result<()> {
         });
     }
 
+    // Event handler
     {
         let mut event_receiver = event_sender.subscribe();
 
@@ -207,9 +214,9 @@ pub async fn mempool_watching(target_address: String) -> Result<()> {
                         Event::Transaction(tx) => {
                             if new_block.number != U64::zero() {
                                 let next_base_fee = calculate_next_block_base_fee(
-                                    new_block.gas_used.as_u64(),
-                                    new_block.gas_limit.as_u64(),
-                                    new_block.base_fee_per_gas.as_u64(),
+                                    new_block.gas_used,
+                                    new_block.gas_limit,
+                                    new_block.base_fee_per_gas,
                                 );
 
                                 // max_fee_per_gas has to be greater than next block's base fee
